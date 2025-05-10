@@ -1,7 +1,6 @@
 package vista;
-
-import entidades.RegistroTemperatura;
-import servicios.ServicioTemperatura;
+import modelo.Rtemperatura;
+import servicio.Modelotemperatura;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -49,8 +48,8 @@ public class FrmTemperaturas extends JFrame {
         add(panelGrafico, BorderLayout.CENTER);
 
         // Servicio
-        servicio = new ServicioTemperatura();
-        datos = servicio.cargarTemperaturas("datos/temperaturas.csv");
+        servicio = new Modelotemperatura();
+        datos = servicio.cargarTemperaturas("datos/Temperaturas.csv");
 
         btnGenerar.addActionListener(e -> generarGrafico());
     }

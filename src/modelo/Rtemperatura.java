@@ -1,7 +1,7 @@
 package modelo;
 import java.time.LocalDate;
   
-public class Rtemperatura extends JFrame{
+public class Rtemperatura {
     private String ciudad;
     private LocalDate fecha;
     private double temperatura;

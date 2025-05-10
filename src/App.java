@@ -1,5 +1,8 @@
+import vista.FrmTemperaturas;
+
 public class App {
-    public static void main(String[] args) throws Exception {
-        new Rtemperatura().setVisible(true);
+    public static void main(String[] args) {
+        new FrmTemperaturas().setVisible(true);
     }
 }
+

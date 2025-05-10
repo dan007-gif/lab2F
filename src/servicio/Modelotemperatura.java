@@ -1,7 +1,5 @@
-package servicios;
-
-import entidades.RegistroTemperatura;
-
+package servicio;
+import modelo.Rtemperatura;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
