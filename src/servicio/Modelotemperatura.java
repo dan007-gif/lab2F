@@ -5,16 +5,15 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Modelotemperatura{
+public class Modelotemperatura {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public List<Rtemperatura> cargarTemperaturas(String rutaArchivo) {
+    public List<Rtemperatura> cargarTemperaturas(String rutaArchivo) throws Exception {
         List<Rtemperatura> lista = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
-            br.readLine(); 
+            br.readLine(); // Saltar encabezado
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.trim().split(",");
@@ -24,18 +23,66 @@ public class Modelotemperatura{
                 lista.add(new Rtemperatura(ciudad, fecha, temp));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception("Error al cargar el archivo: " + e.getMessage(), e);
         }
         return lista;
     }
 
     public Map<String, Double> calcularPromediosPorCiudad(List<Rtemperatura> lista, LocalDate desde, LocalDate hasta) {
-        return lista.stream()
-            .filter(r -> !r.getFecha().isBefore(desde) && !r.getFecha().isAfter(hasta))
-            .collect(Collectors.groupingBy(
-                Rtemperatura::getCiudad,
-                Collectors.averagingDouble(Rtemperatura::getTemperatura)
-            ));
+        Map<String, List<Double>> temperaturasPorCiudad = new HashMap<>();
+
+        for (Rtemperatura r : lista) {
+            if (!r.getFecha().isBefore(desde) && !r.getFecha().isAfter(hasta)) {
+                temperaturasPorCiudad
+                    .computeIfAbsent(r.getCiudad(), k -> new ArrayList<>())
+                    .add(r.getTemperatura());
+            }
+        }
+
+        Map<String, Double> promediosPorCiudad = new HashMap<>();
+        for (Map.Entry<String, List<Double>> entry : temperaturasPorCiudad.entrySet()) {
+            List<Double> temperaturas = entry.getValue();
+            double suma = 0;
+            for (double temp : temperaturas) {
+                suma += temp;
+            }
+            double promedio = temperaturas.isEmpty() ? 0 : suma / temperaturas.size();
+            promediosPorCiudad.put(entry.getKey(), promedio);
+        }
+
+        return promediosPorCiudad;
+    }
+
+    public String calcularExtremos(List<Rtemperatura> datos, LocalDate fechaSeleccionada) throws Exception {
+        List<Rtemperatura> datosFiltrados = new ArrayList<>();
+        for (Rtemperatura r : datos) {
+            if (r.getFecha().equals(fechaSeleccionada)) {
+                datosFiltrados.add(r);
+            }
+        }
+
+        if (datosFiltrados.isEmpty()) {
+            throw new Exception("No hay datos para la fecha seleccionada.");
+        }
+
+        Rtemperatura maxTemp = datosFiltrados.get(0);
+        Rtemperatura minTemp = datosFiltrados.get(0);
+
+        for (Rtemperatura r : datosFiltrados) {
+            if (r.getTemperatura() > maxTemp.getTemperatura()) {
+                maxTemp = r;
+            }
+            if (r.getTemperatura() < minTemp.getTemperatura()) {
+                minTemp = r;
+            }
+        }
+
+        return String.format(
+                "En la fecha %s:\n- Ciudad más calurosa: %s (%.2f °C)\n- Ciudad más fría: %s (%.2f °C)",
+                fechaSeleccionada,
+                maxTemp.getCiudad(), maxTemp.getTemperatura(),
+                minTemp.getCiudad(), minTemp.getTemperatura()
+        );
     }
 }
 

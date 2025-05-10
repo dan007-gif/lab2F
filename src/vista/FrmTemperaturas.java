@@ -27,7 +27,7 @@ public class FrmTemperaturas extends JFrame {
     private List<Rtemperatura> datos;
 
     public FrmTemperaturas() {
-        setTitle("Temperaturas por Ciudad");
+        setTitle("Temperaturas por ciudad");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLayout(new BorderLayout());
@@ -35,8 +35,8 @@ public class FrmTemperaturas extends JFrame {
         JPanel panelControles = new JPanel();
         fechaInicio = new DateChooserCombo();
         fechaFin = new DateChooserCombo();
-        btnGenerar = new JButton("Generar Promedios");
-        btnCalcularExtremos = new JButton("Calcular Extremos"); 
+        btnGenerar = new JButton("Generar promedios");
+        btnCalcularExtremos = new JButton("Calcular extremos"); 
         panelControles.add(new JLabel("Desde:"));
         panelControles.add(fechaInicio);
         panelControles.add(new JLabel("Hasta:"));
@@ -116,7 +116,7 @@ public class FrmTemperaturas extends JFrame {
             Calendar calHasta = fechaFin.getSelectedDate();
 
             if (calDesde == null || calHasta == null) {
-                JOptionPane.showMessageDialog(this, "Por favor, seleccione ambas fechas.");
+                JOptionPane.showMessageDialog(this, " seleccione ambas fechas.");
                 return;
             }
 
@@ -144,7 +144,7 @@ public class FrmTemperaturas extends JFrame {
             promedios.forEach((ciudad, temp) -> dataset.addValue(temp, "Temperatura", ciudad));
 
             JFreeChart chart = ChartFactory.createBarChart(
-                    "Promedio de Temperaturas",
+                    "Promedio de temperaturas por ciudad",
                     "Ciudad",
                     "Temperatura (°C)",
                     dataset
@@ -161,3 +161,4 @@ public class FrmTemperaturas extends JFrame {
         }
     }
 }
+
