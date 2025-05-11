@@ -13,7 +13,7 @@ public class Modelotemperatura {
     public List<Rtemperatura> cargarTemperaturas(String rutaArchivo) throws Exception {
         List<Rtemperatura> lista = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
-            br.readLine(); // Saltar encabezado
+            br.readLine(); 
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.trim().split(",");
